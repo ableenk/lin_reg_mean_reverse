@@ -3,7 +3,7 @@ import numpy as np
 from numba import njit
 
 @njit
-def linear_comb(assets: np.ndarray, weights: np.ndarray) -> np.ndarray:
+def linear_comb(assets: np.ndarray, weights: np.ndarray):
     '''Returns linear combination of assets with related weights. 
     '''
     if weights.ndim != 1:
@@ -14,7 +14,7 @@ def linear_comb(assets: np.ndarray, weights: np.ndarray) -> np.ndarray:
     result = weights * assets
     return result.sum(axis=1)
 
-def sharp_coef(wealthy: np.ndarray) -> float:
+def sharp_coef(wealthy: np.ndarray):
     '''Calculates sharp coefficient by returns.
     '''
     returns = wealthy[1:] - wealthy[:-1]
@@ -22,7 +22,7 @@ def sharp_coef(wealthy: np.ndarray) -> float:
         return 0
     return returns.shape[0]**0.5 * np.mean(returns)/np.std(returns)
 
-def get_score(wealthy: np.ndarray) -> float:
+def get_score(wealthy: np.ndarray):
     _, _, max_drawdown = calculate_drawdown(wealthy)
     max_value = wealthy[-1]-wealthy[0]
     if max_value < 0:

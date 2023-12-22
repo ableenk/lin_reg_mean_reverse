@@ -3,14 +3,14 @@ import seaborn as sns
 
 from tools import *
 from backtests import *
-sns.set_theme(style='darkgrid')
-sns.color_palette('rainbow')
 
 class ModelVisualizing():
     '''Class for visualizing and easy getting data by params.
     '''
 
     def __init__(self, ask, bid):
+        sns.set_theme(style='darkgrid')
+        sns.color_palette('rainbow')
         self.ask = ask
         self.bid = bid
         self.mid = (ask+bid)/2
@@ -41,9 +41,8 @@ class ModelVisualizing():
         wealthy = (balance+UPLs)[:period[1]]
         lc = linear_comb(self.mid[self.train_size:self.train_size+weights.shape[0]], weights)
 
-        fig = plt.figure(figsize=(24, 12))
+        fig = plt.figure(figsize=(18, 9))
         fig.patch.set_facecolor('white')
-        plt.figure(figsize=(30, 15))
         plt.subplot(1, 2, 1)
         plt.plot(np.arange(wealthy.shape[0]), wealthy)
         plt.subplot(1, 2, 2)

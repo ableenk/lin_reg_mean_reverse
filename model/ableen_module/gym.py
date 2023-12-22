@@ -7,7 +7,7 @@ from numba import njit
 
 from tools import linear_comb
 
-def my_ridge(X_true, y_true, alpha, max_pos_usd):
+def my_ridge(X_true, y_true, alpha):
     '''Single ridge fit.
     Returns weights for non-dependent assets and mean value of linear combination.
     '''
@@ -23,7 +23,7 @@ def my_ridge(X_true, y_true, alpha, max_pos_usd):
 
     return coef_
 
-def my_ridge_train(train, alpha, dependent_variable, max_position_usd):
+def my_ridge_train(train, alpha, dependent_variable=-1, max_position_usd=1000):
     '''Full training pack.
     Returns weights for all assets and mean value of linear combination.
     '''
@@ -37,7 +37,7 @@ def my_ridge_train(train, alpha, dependent_variable, max_position_usd):
     X_offset = np.average(X, axis=0)
     y_offset = np.average(y, axis=0)
     
-    betas = my_ridge(X, y, alpha, max_position_usd)
+    betas = my_ridge(X, y, alpha)
     weights = np.zeros(nvar) - 1
     bool_assets = np.where(np.arange(nvar) != dependent_variable)
     weights[bool_assets] = betas
