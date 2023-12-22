@@ -44,6 +44,7 @@ class ModelVisualizing():
         fig = plt.figure(figsize=(18, 9))
         fig.patch.set_facecolor('white')
         plt.subplot(1, 2, 1)
+        plt.axvline(self.split-self.train_size, color='r')
         plt.plot(np.arange(wealthy.shape[0]), wealthy)
         plt.subplot(1, 2, 2)
         plt.plot(uppers - means, color='r')

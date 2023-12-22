@@ -113,12 +113,8 @@ def get_data_for_backtest(data_array, train_size, test_size, max_position_usd, s
     split = train_size
     end = train_size + test_size
     for era in range(eras_number):
-        correlation_sample = data_array[max(split-corr_size, 0):split]
         train_sample = data_array[start:split]
-        if min_correlation is None and need is None:
-            correlated = np.ones(data_array.shape[1]).astype('bool')
-        else:
-            correlated = get_correlated(correlation_sample.T[::], need=need, min_corr=min_correlation, low_threshold=low_threshold)
+        correlated = np.ones(data_array.shape[1]).astype('bool')
         if correlated.sum() < 4:
             weights = np.zeros(test_size)
             mean_lc = 0

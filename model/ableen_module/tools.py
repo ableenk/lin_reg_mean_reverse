@@ -42,56 +42,6 @@ def score_zero_crossing(array, learn_freq):
     signs_multiply = array[1:] * array[:-1]
     return (signs_multiply < 0).sum()
 
-def get_correlated(array, need=None, min_corr=None, low_threshold=0):
-    '''Get k more correlated assets.
-    '''
-    corr = np.corrcoef(array)
-    corr_mean = np.abs(corr).mean(axis=0)
-    if min_corr is None:
-        best_assets = k_biggest_corr(corr[:, :], need)
-        result = np.zeros(array.shape[0]).astype('bool')
-        result[best_assets] = True
-        return result
-    else:
-        first_cut = corr_mean > low_threshold
-        if first_cut.sum() < 3:
-            return np.zeros(array.shape[0])
-        second_cut = np.abs(np.corrcoef(array[first_cut])).mean(axis=1) > min_corr
-        second_cut
-        j = 0
-        for i in range(first_cut.shape[0]):
-            if first_cut[i]:
-                first_cut[i] = second_cut[j]
-                j += 1
-        return first_cut
-
-def k_biggest_corr(arr, k):
-    '''Select k assets by biggest corr values.
-    '''
-    arr = np.where((arr - 1)**2 < 10**-6, 0, arr)
-    i, j = np.argwhere(arr==arr.max())[0]
-    count = 0
-    instruments = []
-    instruments_count = arr.shape[0]
-    assert k <= instruments_count, f"You have only {instruments_count} assets, but {k} was requested"
-    while count < k:
-        count += 1
-        max_j = np.argmax(arr[i])
-        max_i = np.argmax(arr[j])
-        if arr[max_i][j] > arr[i][max_j]:
-            arr[i] = np.zeros(instruments_count)
-            arr[:, i] = np.zeros(instruments_count)
-            i = max_i
-            instruments.append(i)
-        else:
-            arr[j] = np.zeros(instruments_count)
-            arr[:, j] = np.zeros(instruments_count)
-            j = max_j
-            instruments.append(j)
-        arr[i][j] = 0
-        arr[j][i] = 0
-    return np.array(instruments)
-
 @njit
 def out_of_bounds(lcs, means, uppers, lowers, ts, stop_loss_coef):
     '''Test for big deviation, tells which threshold have been exceeded
@@ -117,7 +67,6 @@ def pos_should_be_closed(current_action, lcs, means, uppers, lowers, ts, stop_lo
     out_of_b = out_of_bounds(lcs, means, uppers, lowers, ts, stop_loss_coef)
     return mean_crossed or era_changed or out_of_b
 
-# Сигнал на действие
 @njit
 def get_action(lcs, means, uppers, lowers, ts):
     '''Returns which action should we do at the moment.
